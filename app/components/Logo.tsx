@@ -1,7 +1,18 @@
 import React from 'react';
 export const Logo = ({ className = "" }: { className?: string }) => {
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (typeof window !== 'undefined' && window.location.pathname === '/') {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
-    <div className={`flex items-center ${className}`}>
+    <a
+      href="/"
+      onClick={handleClick}
+      className={`flex items-center cursor-pointer ${className}`}
+    >
       <div className="relative group">
         {/* Glow background to highlight the logo */}
         <div className="absolute -inset-2 bg-brand-secondary/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -15,6 +26,6 @@ export const Logo = ({ className = "" }: { className?: string }) => {
           />
         </div>
       </div>
-    </div>
+    </a>
   );
 };
