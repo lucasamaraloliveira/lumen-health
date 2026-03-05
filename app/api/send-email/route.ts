@@ -5,9 +5,9 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
     try {
-        const { name, email, subject, message } = await request.json();
+        const { name, email, phone, subject, message } = await request.json();
 
-        if (!name || !email || !subject || !message) {
+        if (!name || !email || !phone || !subject || !message) {
             return NextResponse.json(
                 { error: 'Todos os campos são obrigatórios.' },
                 { status: 400 }
@@ -16,7 +16,7 @@ export async function POST(request: Request) {
 
         const { data, error } = await resend.emails.send({
             from: 'Lumen Health <onboarding@resend.dev>', // Use sua conta verificada no Resend em produção
-            to: ['contato@lumenhealth.com.br'], // Email para onde as mensagens serão enviadas
+            to: ['lucas.amaral.oliveira.silva@gmail.com'], // Email verificado para testes no modo Sandbox
             subject: `Novo Contato: ${subject}`,
             replyTo: email,
             html: `
@@ -24,6 +24,7 @@ export async function POST(request: Request) {
           <h2 style="color: #0f172a;">Nova mensagem do formulário de contato</h2>
           <p><strong>Nome:</strong> ${name}</p>
           <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Telefone:</strong> ${phone}</p>
           <p><strong>Assunto:</strong> ${subject}</p>
           <p><strong>Mensagem:</strong></p>
           <div style="background-color: #f1f5f9; padding: 15px; border-radius: 8px;">
@@ -36,6 +37,7 @@ export async function POST(request: Request) {
         });
 
         if (error) {
+            console.error('Resend error:', error);
             return NextResponse.json({ error }, { status: 400 });
         }
 

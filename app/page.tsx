@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Activity,
@@ -27,7 +27,9 @@ import {
   MessageCircle
 } from 'lucide-react';
 import { Logo } from './components/Logo';
-import { useEffect } from 'react';
+import { toast } from 'react-toastify';
+
+
 
 const NavItem = ({ children, href }: { children: React.ReactNode, href: string }) => (
   <a
@@ -38,10 +40,11 @@ const NavItem = ({ children, href }: { children: React.ReactNode, href: string }
   </a>
 );
 
-const FeatureCard = ({ icon: Icon, title, description }: { icon: any, title: string, description: string }) => (
+const FeatureCard = ({ icon: Icon, title, description, onClick }: { icon: any, title: string, description: string, onClick?: () => void }) => (
   <motion.div
     whileHover={{ y: -5 }}
-    className="glass-card p-6 sm:p-8 rounded-2xl flex flex-col gap-4"
+    onClick={onClick}
+    className={`glass-card p-6 sm:p-8 rounded-2xl flex flex-col gap-4 ${onClick ? 'cursor-pointer hover:border-brand-secondary/50 transition-colors' : ''}`}
   >
     <div className="w-12 h-12 bg-sky-50 rounded-xl flex items-center justify-center text-brand-secondary shrink-0">
       <Icon size={24} />
@@ -64,17 +67,159 @@ const SocialIcon = ({ icon: Icon, href }: { icon: any, href: string }) => (
   </a>
 );
 
+const ServiceModal = ({ isOpen, onClose, service }: { isOpen: boolean, onClose: () => void, service: any }) => {
+  if (!service) return null;
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100]"
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="fixed inset-4 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:max-w-xl w-full bg-white z-[101] rounded-3xl shadow-2xl overflow-hidden"
+          >
+            <div className="relative p-8 sm:p-12">
+              <button
+                onClick={onClose}
+                className="absolute top-6 right-6 p-2 text-slate-400 hover:text-slate-600 bg-slate-50 rounded-full transition-colors"
+              >
+                <X size={20} />
+              </button>
+
+              <div className="w-16 h-16 bg-sky-50 rounded-2xl flex items-center justify-center text-brand-secondary mb-6">
+                <service.icon size={32} />
+              </div>
+
+              <h3 className="text-3xl font-bold text-brand-primary mb-4">{service.title}</h3>
+              <p className="text-slate-600 text-lg leading-relaxed mb-8">
+                {service.fullDescription}
+              </p>
+
+              <div className="space-y-4">
+                <h4 className="font-bold text-brand-primary uppercase text-xs tracking-widest">Diferenciais</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {service.benefits.map((benefit: string, i: number) => (
+                    <div key={i} className="flex items-center gap-2 text-slate-600 text-sm">
+                      <CheckCircle2 size={16} className="text-green-500 shrink-0" />
+                      {benefit}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <button
+                onClick={onClose}
+                className="w-full mt-10 bg-brand-primary text-white py-4 rounded-xl font-bold hover:bg-slate-800 transition-all"
+              >
+                Fechar
+              </button>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+};
+
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     subject: 'Solicitar Orçamento',
     message: ''
   });
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [selectedService, setSelectedService] = useState<any>(null);
+  const [isSubjectOpen, setIsSubjectOpen] = useState(false);
+  const subjectRef = useRef<HTMLDivElement>(null);
+
+  const subjectOptions = ['Solicitar Orçamento', 'Dúvidas Técnicas', 'Outros Assuntos'];
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (subjectRef.current && !subjectRef.current.contains(event.target as Node)) {
+        setIsSubjectOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
+    if (!formData.name.trim()) newErrors.name = 'Nome é obrigatório';
+    if (!formData.email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) newErrors.email = 'E-mail inválido';
+    if (formData.phone.replace(/\D/g, '').length < 10) newErrors.phone = 'Telefone incompleto';
+    if (!formData.message.trim()) newErrors.message = 'Mensagem é obrigatória';
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const formatPhoneNumber = (value: string) => {
+    const numbers = value.replace(/\D/g, '');
+    if (numbers.length <= 2) return numbers;
+    if (numbers.length <= 7) return `(${numbers.slice(0, 2)}) ${numbers.slice(2)}`;
+    return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`;
+  };
+
+  const services = [
+    {
+      icon: Activity,
+      title: "Raio-X Digital",
+      description: "Laudos de radiologia convencional e contrastada com alta precisão e rapidez.",
+      fullDescription: "Nosso serviço de Raio-X digital utiliza plataformas de ponta para análise de radiografias convencionais e contrastadas. Oferecemos laudos detalhados que auxiliam no diagnóstico rápido de fraturas, patologias torácicas, abdominais e muito mais.",
+      benefits: ["Plantão 24/7", "Laudos em 15min", "Dupla checagem", "Conformidade LGPD"]
+    },
+    {
+      icon: Database,
+      title: "Tomografia",
+      description: "Análise detalhada de exames de CT com reconstruções 3D e protocolos específicos.",
+      fullDescription: "Especialistas em Tomografia Computadorizada realizam a leitura de exames complexos, incluindo angiotomografias e reconstruções tridimensionais. Focamos na precisão anatômica e na identificação precoce de anomalias.",
+      benefits: ["Reconstrução 3D", "Protocolos específicos", "Subespecialistas", "Alta resolução"]
+    },
+    {
+      icon: Shield,
+      title: "Ressonância",
+      description: "Especialistas em neuro, musculoesquelético e abdome para laudos complexos.",
+      fullDescription: "A Ressonância Magnética exige expertise profunda. Contamos com um corpo clínico dividido por subespecialidades para garantir que cada exame de neuro, abdome ou musculoesquelético seja laudado por quem mais entende do assunto.",
+      benefits: ["Laudos Neuro", "Musculoesquelético", "Abdome superior", "Pelve masculina/fem"]
+    },
+    {
+      icon: FileText,
+      title: "Mamografia",
+      description: "Leitura crítica seguindo padrões BI-RADS para detecção precoce e acompanhamento.",
+      fullDescription: "Dedicamos atenção especial à saúde da mulher. Nossos laudos de mamografia seguem rigorosamente o padrão BI-RADS, garantindo uma comunicação clara e precisa entre radiologista e médico assistente.",
+      benefits: ["Padrão BI-RADS", "Prevenção", "Expertise em mama", "Acompanhamento"]
+    },
+    {
+      icon: Users,
+      title: "Segunda Opinião",
+      description: "Consultoria especializada para casos desafiadores e revisão de diagnósticos.",
+      fullDescription: "Oferecemos um serviço de consultoria radiológica para casos de alta complexidade. Nossa equipe revisa exames e fornece uma perspectiva adicional fundamentada nas melhores práticas mundiais.",
+      benefits: ["Casos complexos", "Revisão detalhada", "Consultoria direta", "Segurança diagnóstica"]
+    },
+    {
+      icon: Globe,
+      title: "Telerradiologia 24h",
+      description: "Suporte ininterrupto para plantões e emergências em todo o território nacional.",
+      fullDescription: "Sua clínica nunca fica descoberta. Nosso serviço de plantão 24 horas garante que exames de urgência e emergência sejam laudados em tempo recorde, independentemente do horário ou localização.",
+      benefits: ["Acesso remoto", "Nacional", "Suporte 24/7", "Escalabilidade"]
+    }
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -90,6 +235,10 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validate()) {
+      toast.warn('Por favor, corrija os erros no formulário.');
+      return;
+    }
     setStatus('sending');
     setErrorMessage('');
 
@@ -105,14 +254,19 @@ export default function Home() {
       const result = await response.json();
 
       if (response.ok) {
+        toast.success('Mensagem enviada com sucesso! Entraremos em contato em breve.');
         setStatus('success');
-        setFormData({ name: '', email: '', subject: 'Solicitar Orçamento', message: '' });
+        setFormData({ name: '', email: '', phone: '', subject: 'Solicitar Orçamento', message: '' });
         setTimeout(() => setStatus('idle'), 5000);
       } else {
-        throw new Error(result.error || 'Erro ao enviar mensagem.');
+        const errorMsg = typeof result.error === 'object'
+          ? (result.error.message || JSON.stringify(result.error))
+          : result.error;
+        throw new Error(errorMsg || 'Erro ao enviar mensagem.');
       }
     } catch (error: any) {
       console.error('Email error:', error);
+      toast.error(error.message || 'Ocorreu um erro inesperado.');
       setStatus('error');
       setErrorMessage(error.message || 'Ocorreu um erro inesperado.');
     }
@@ -120,6 +274,11 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col medical-grid overflow-x-hidden">
+      <ServiceModal
+        isOpen={!!selectedService}
+        onClose={() => setSelectedService(null)}
+        service={selectedService}
+      />
       {/* Floating Navbar */}
       <div className="fixed top-4 sm:top-6 inset-x-0 z-50 px-4 sm:px-6 lg:px-8 pointer-events-none">
         <header className="max-w-7xl mx-auto h-16 sm:h-20 glass-card border border-slate-200/50 rounded-2xl sm:rounded-3xl shadow-xl shadow-slate-200/40 flex items-center justify-between px-4 sm:px-8 pointer-events-auto">
@@ -155,14 +314,14 @@ export default function Home() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 lg:hidden"
+              className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[60] lg:hidden"
               onClick={() => setIsMenuOpen(false)}
             />
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="fixed top-20 right-4 left-4 sm:left-auto sm:right-8 sm:w-[320px] bg-white z-50 lg:hidden shadow-2xl rounded-3xl p-6 flex flex-col gap-6 border border-slate-100"
+              className="fixed top-24 right-4 left-4 sm:left-auto sm:right-8 sm:w-[320px] bg-white z-[61] lg:hidden shadow-2xl rounded-3xl p-6 flex flex-col gap-6 border border-slate-100"
             >
               <div className="flex items-center justify-between mb-2">
                 <Logo className="scale-90 origin-left" />
@@ -380,8 +539,8 @@ export default function Home() {
                 viewport={{ once: true }}
                 className="relative"
               >
-                <div className="rounded-3xl overflow-hidden shadow-2xl rotate-3">
-                  <img src="https://picsum.photos/seed/office/800/800" alt="Equipe Lumen Health" className="w-full h-full object-cover" />
+                <div className="rounded-3xl overflow-hidden shadow-2xl rotate-3 aspect-[3/4]">
+                  <img src="/images/radiologist.png" alt="Médico radiologista analisando exames em monitor profissional" className="w-full h-full object-cover" />
                 </div>
                 <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-brand-accent rounded-full -z-10 blur-3xl opacity-20" />
               </motion.div>
@@ -438,11 +597,15 @@ export default function Home() {
                         type="text"
                         required
                         value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-secondary focus:ring-2 focus:ring-brand-secondary/20 outline-none transition-all"
+                        onChange={(e) => {
+                          setFormData({ ...formData, name: e.target.value });
+                          if (errors.name) setErrors({ ...errors, name: '' });
+                        }}
+                        className={`w-full px-4 py-3 rounded-xl border ${errors.name ? 'border-red-500 bg-red-50' : 'border-slate-200'} focus:border-brand-secondary focus:ring-2 focus:ring-brand-secondary/20 outline-none transition-all`}
                         placeholder="Seu nome..."
                         disabled={status === 'sending'}
                       />
+                      {errors.name && <p className="text-red-500 text-xs mt-1 font-medium">{errors.name}</p>}
                     </div>
                     <div>
                       <label htmlFor="email" className="block text-sm font-bold text-slate-700 mb-2">E-mail Corporativo</label>
@@ -451,29 +614,80 @@ export default function Home() {
                         type="email"
                         required
                         value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-secondary focus:ring-2 focus:ring-brand-secondary/20 outline-none transition-all"
+                        onChange={(e) => {
+                          setFormData({ ...formData, email: e.target.value });
+                          if (errors.email) setErrors({ ...errors, email: '' });
+                        }}
+                        className={`w-full px-4 py-3 rounded-xl border ${errors.email ? 'border-red-500 bg-red-50' : 'border-slate-200'} focus:border-brand-secondary focus:ring-2 focus:ring-brand-secondary/20 outline-none transition-all`}
                         placeholder="seu@email.com..."
                         disabled={status === 'sending'}
                       />
+                      {errors.email && <p className="text-red-500 text-xs mt-1 font-medium">{errors.email}</p>}
                     </div>
                   </div>
-                  <div>
-                    <label htmlFor="subject" className="block text-sm font-bold text-slate-700 mb-2">Assunto</label>
-                    <div className="relative">
-                      <select
-                        id="subject"
-                        value={formData.subject}
-                        onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-secondary focus:ring-2 focus:ring-brand-secondary/20 outline-none transition-all appearance-none bg-white"
+                  <div className="grid sm:grid-cols-2 gap-6">
+                    <div>
+                      <label htmlFor="phone" className="block text-sm font-bold text-slate-700 mb-2">WhatsApp / Telefone</label>
+                      <input
+                        id="phone"
+                        type="text"
+                        required
+                        value={formData.phone}
+                        onChange={(e) => {
+                          const formatted = formatPhoneNumber(e.target.value);
+                          setFormData({ ...formData, phone: formatted });
+                          if (errors.phone) setErrors({ ...errors, phone: '' });
+                        }}
+                        className={`w-full px-4 py-3 rounded-xl border ${errors.phone ? 'border-red-500 bg-red-50' : 'border-slate-200'} focus:border-brand-secondary focus:ring-2 focus:ring-brand-secondary/20 outline-none transition-all`}
+                        placeholder="(11) 99999-9999"
                         disabled={status === 'sending'}
-                      >
-                        <option>Solicitar Orçamento</option>
-                        <option>Dúvidas Técnicas</option>
-                        <option>Outros Assuntos</option>
-                      </select>
-                      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                        <ChevronRight size={16} className="rotate-90" />
+                        maxLength={15}
+                      />
+                      {errors.phone && <p className="text-red-500 text-xs mt-1 font-medium">{errors.phone}</p>}
+                    </div>
+                    <div ref={subjectRef}>
+                      <label htmlFor="subject" className="block text-sm font-bold text-slate-700 mb-2">Assunto</label>
+                      <div className="relative">
+                        <button
+                          type="button"
+                          onClick={() => setIsSubjectOpen(!isSubjectOpen)}
+                          className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white flex items-center justify-between hover:border-brand-secondary transition-all outline-none focus:ring-2 focus:ring-brand-secondary/20"
+                          disabled={status === 'sending'}
+                        >
+                          <span className="text-slate-600">{formData.subject}</span>
+                          <ChevronRight
+                            size={16}
+                            className={`text-slate-400 transition-transform duration-300 ${isSubjectOpen ? '-rotate-90' : 'rotate-90'
+                              }`}
+                          />
+                        </button>
+
+                        <AnimatePresence>
+                          {isSubjectOpen && (
+                            <motion.div
+                              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                              animate={{ opacity: 1, y: 0, scale: 1 }}
+                              exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                              className="absolute z-50 mt-2 w-full bg-white rounded-xl shadow-2xl border border-slate-100 py-2 overflow-hidden"
+                            >
+                              {subjectOptions.map((option) => (
+                                <button
+                                  key={option}
+                                  type="button"
+                                  onClick={() => {
+                                    setFormData({ ...formData, subject: option });
+                                    setIsSubjectOpen(false);
+                                  }}
+                                  className={`w-full px-4 py-3 text-left text-sm transition-colors hover:bg-sky-50 flex items-center justify-between ${formData.subject === option ? 'text-brand-secondary font-bold bg-sky-50/50' : 'text-slate-600'
+                                    }`}
+                                >
+                                  {option}
+                                  {formData.subject === option && <CheckCircle2 size={14} />}
+                                </button>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </div>
                     </div>
                   </div>
@@ -484,34 +698,16 @@ export default function Home() {
                       rows={4}
                       required
                       value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-secondary focus:ring-2 focus:ring-brand-secondary/20 outline-none transition-all resize-none"
+                      onChange={(e) => {
+                        setFormData({ ...formData, message: e.target.value });
+                        if (errors.message) setErrors({ ...errors, message: '' });
+                      }}
+                      className={`w-full px-4 py-3 rounded-xl border ${errors.message ? 'border-red-500 bg-red-50' : 'border-slate-200'} focus:border-brand-secondary focus:ring-2 focus:ring-brand-secondary/20 outline-none transition-all resize-none`}
                       placeholder="Como podemos ajudar?"
                       disabled={status === 'sending'}
                     ></textarea>
+                    {errors.message && <p className="text-red-500 text-xs mt-1 font-medium">{errors.message}</p>}
                   </div>
-
-                  {status === 'success' && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="p-4 bg-green-50 text-green-700 rounded-xl text-sm font-medium border border-green-100 flex items-center gap-3"
-                    >
-                      <CheckCircle2 size={18} />
-                      Mensagem enviada com sucesso! Entraremos em contato em breve.
-                    </motion.div>
-                  )}
-
-                  {status === 'error' && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="p-4 bg-red-50 text-red-700 rounded-xl text-sm font-medium border border-red-100 flex items-center gap-3"
-                    >
-                      <X size={18} />
-                      {errorMessage}
-                    </motion.div>
-                  )}
 
                   <button
                     type="submit"
@@ -548,36 +744,15 @@ export default function Home() {
             </div>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-              <FeatureCard
-                icon={Activity}
-                title="Raio-X Digital"
-                description="Laudos de radiologia convencional e contrastada com alta precisão e rapidez."
-              />
-              <FeatureCard
-                icon={Database}
-                title="Tomografia"
-                description="Análise detalhada de exames de CT com reconstruções 3D e protocolos específicos."
-              />
-              <FeatureCard
-                icon={Shield}
-                title="Ressonância"
-                description="Especialistas em neuro, musculoesquelético e abdome para laudos complexos."
-              />
-              <FeatureCard
-                icon={FileText}
-                title="Mamografia"
-                description="Leitura crítica seguindo padrões BI-RADS para detecção precoce e acompanhamento."
-              />
-              <FeatureCard
-                icon={Users}
-                title="Segunda Opinião"
-                description="Consultoria especializada para casos desafiadores e revisão de diagnósticos."
-              />
-              <FeatureCard
-                icon={Globe}
-                title="Telerradiologia 24h"
-                description="Suporte ininterrupto para plantões e emergências em todo o território nacional."
-              />
+              {services.map((service, index) => (
+                <FeatureCard
+                  key={index}
+                  icon={service.icon}
+                  title={service.title}
+                  description={service.description}
+                  onClick={() => setSelectedService(service)}
+                />
+              ))}
             </div>
           </div>
         </section>
@@ -667,19 +842,19 @@ export default function Home() {
             <div className="sm:pl-8 lg:pl-0">
               <h4 className="font-bold text-brand-primary mb-6 uppercase text-[10px] tracking-widest">Serviços</h4>
               <ul className="space-y-4 text-slate-600 text-sm sm:text-base">
-                <li><a href="#" className="hover:text-brand-secondary transition-colors">Raio-X Digital</a></li>
-                <li><a href="#" className="hover:text-brand-secondary transition-colors">Tomografia</a></li>
-                <li><a href="#" className="hover:text-brand-secondary transition-colors">Ressonância</a></li>
-                <li><a href="#" className="hover:text-brand-secondary transition-colors">Mamografia</a></li>
+                <li><button onClick={() => setSelectedService(services[0])} className="hover:text-brand-secondary transition-colors text-left">Raio-X Digital</button></li>
+                <li><button onClick={() => setSelectedService(services[1])} className="hover:text-brand-secondary transition-colors text-left">Tomografia</button></li>
+                <li><button onClick={() => setSelectedService(services[2])} className="hover:text-brand-secondary transition-colors text-left">Ressonância</button></li>
+                <li><button onClick={() => setSelectedService(services[3])} className="hover:text-brand-secondary transition-colors text-left">Mamografia</button></li>
               </ul>
             </div>
 
             <div>
               <h4 className="font-bold text-brand-primary mb-6 uppercase text-[10px] tracking-widest">Empresa</h4>
               <ul className="space-y-4 text-slate-600 text-sm sm:text-base">
-                <li><a href="#" className="hover:text-brand-secondary transition-colors">Sobre Nós</a></li>
-                <li><a href="#" className="hover:text-brand-secondary transition-colors">Carreiras</a></li>
-                <li><a href="#" className="hover:text-brand-secondary transition-colors">Contato</a></li>
+                <li><a href="#sobre" className="hover:text-brand-secondary transition-colors">Sobre Nós</a></li>
+                <li><a href="#beneficios" className="hover:text-brand-secondary transition-colors">Benefícios</a></li>
+                <li><a href="#contato" className="hover:text-brand-secondary transition-colors">Contato</a></li>
               </ul>
             </div>
 
@@ -703,17 +878,17 @@ export default function Home() {
           </div>
 
           <div className="border-t border-slate-200 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] sm:text-xs text-slate-400 text-center sm:text-left">
-            <p>© 2026 Lumen Health Telerradiologia. Todos os direitos reservados.</p>
+            <p>© 2026 Lumen Health Telerradiologia. Desenvolvido por Alrion Tech 2026.</p>
             <div className="flex gap-6 sm:gap-8">
-              <a href="#" className="hover:text-slate-600 transition-colors">Privacidade</a>
-              <a href="#" className="hover:text-slate-600 transition-colors">Termos de Uso</a>
+              <a href="/privacidade" className="hover:text-slate-600 transition-colors">Privacidade</a>
+              <a href="/termos" className="hover:text-slate-600 transition-colors">Termos de Uso</a>
             </div>
           </div>
         </div>
       </footer>
 
       {/* Floating Buttons Container */}
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-4">
+      <div className="fixed bottom-6 right-6 z-40 flex flex-col gap-4">
         {/* WhatsApp Balloon */}
         <motion.a
           href="https://wa.me/551140030000"
