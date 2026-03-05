@@ -361,7 +361,7 @@ export default function Home() {
                 <div className="space-y-4 text-slate-600 leading-relaxed">
                   <p>Fundada com o propósito de democratizar o acesso a diagnósticos de alta qualidade, a Lumen Health nasceu da união entre medicina radiológica e inovação tecnológica.</p>
                   <p>Hoje, somos referência em telerradiologia no Brasil, atendendo centenas de clínicas e hospitais com um compromisso inegociável: a precisão diagnóstica que salva vidas.</p>
-                  <p>Nossa equipe é composta por radiologistas subespecialistas que utilizam as ferramentas mais avançadas de IA e processamento de imagem para entregar laudos detalhados e assertivos.</p>
+                  <p>Nossa equipe é composta por radiologistas subespecialistas que utilizam as ferramentas mais avançadas e processamento de imagem para entregar laudos detalhados e assertivos.</p>
                 </div>
                 <div className="mt-8 grid grid-cols-2 gap-6">
                   <div className="p-4 bg-sky-50 rounded-xl">
