@@ -8,6 +8,7 @@ export const metadata: Metadata = {
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { GoogleTagManager } from '@next/third-parties/google';
 
 export default function RootLayout({
   children,
@@ -17,6 +18,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className="antialiased font-sans">
+        <GoogleTagManager gtmId="GTM-XXXXXXX" />
         {children}
         <ToastContainer
           position="top-right"

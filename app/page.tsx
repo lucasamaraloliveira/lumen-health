@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import { Logo } from './components/Logo';
 import { toast } from 'react-toastify';
+import { sendGTMEvent } from '@next/third-parties/google';
 
 
 
@@ -255,6 +256,10 @@ export default function Home() {
 
       if (response.ok) {
         toast.success('Mensagem enviada com sucesso! Entraremos em contato em breve.');
+
+        // Google Ads / GTM Conversion Event
+        sendGTMEvent({ event: 'generate_lead', value: 'contact_form' });
+
         setStatus('success');
         setFormData({ name: '', email: '', phone: '', subject: 'Solicitar Orçamento', message: '' });
         setTimeout(() => setStatus('idle'), 5000);
@@ -581,7 +586,7 @@ export default function Home() {
                     </div>
                     <div>
                       <div className="text-xs text-sky-100/40 uppercase font-bold mb-1">Endereço</div>
-                      <div className="font-bold text-sm">Av. Paulista, 1000 - São Paulo, SP</div>
+                      <div className="font-bold text-sm">Rui Barbosa, 45 - Teresópolis, RJ</div>
                     </div>
                   </div>
                 </div>
@@ -871,7 +876,7 @@ export default function Home() {
                 </li>
                 <li className="flex items-start gap-3">
                   <MapPin size={18} className="text-brand-secondary mt-1 shrink-0" />
-                  <span>Av. Paulista, 1000 - São Paulo, SP</span>
+                  <span>Rui Barbosa, 45 - Teresópolis, RJ</span>
                 </li>
               </ul>
             </div>
