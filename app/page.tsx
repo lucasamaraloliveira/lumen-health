@@ -85,7 +85,7 @@ const ServiceModal = ({ isOpen, onClose, service }: { isOpen: boolean, onClose: 
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed inset-4 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:max-w-xl w-full bg-white z-[101] rounded-3xl shadow-2xl overflow-hidden"
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-2rem)] sm:max-w-xl bg-white z-[101] rounded-3xl shadow-2xl overflow-hidden"
           >
             <div className="relative p-8 sm:p-12">
               <button
@@ -388,7 +388,7 @@ export default function Home() {
                     href="https://wa.me/551140030000?text=Quero%20um%20or%C3%A7amento"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-brand-secondary text-white px-8 py-4 rounded-full font-bold text-base sm:text-lg hover:bg-brand-accent transition-all shadow-xl shadow-sky-200 flex items-center justify-center gap-2 group"
+                    className="bg-brand-secondary text-white px-8 py-4 rounded-full font-bold text-base sm:text-lg hover:bg-brand-accent transition-all shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2 group"
                   >
                     Solicitar Orçamento
                     <ArrowRight className="group-hover:translate-x-1 transition-transform" />
@@ -476,7 +476,7 @@ export default function Home() {
         </section>
 
         {/* Benefits Section */}
-        <section id="beneficios" className="py-16 sm:py-24 bg-slate-50">
+        <section id="beneficios" className="py-16 sm:py-24 bg-slate-50 scroll-mt-24 sm:scroll-mt-32">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
               <h2 className="text-3xl sm:text-4xl font-bold text-brand-primary mb-4">Por que escolher a Lumen Health?</h2>
@@ -510,7 +510,7 @@ export default function Home() {
         </section>
 
         {/* About Section */}
-        <section id="sobre" className="py-16 sm:py-24 bg-white overflow-hidden">
+        <section id="sobre" className="py-16 sm:py-24 bg-white overflow-hidden scroll-mt-24 sm:scroll-mt-32">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               <motion.div
@@ -554,7 +554,7 @@ export default function Home() {
         </section>
 
         {/* Contact Section */}
-        <section id="contato" className="py-16 sm:py-24 bg-slate-50">
+        <section id="contato" className="py-16 sm:py-24 bg-slate-50 scroll-mt-24 sm:scroll-mt-32">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="bg-white rounded-[3rem] shadow-xl overflow-hidden grid lg:grid-cols-5">
               <div className="lg:col-span-2 bg-brand-primary p-8 sm:p-12 text-white">
@@ -741,7 +741,7 @@ export default function Home() {
 
 
         {/* Services Section */}
-        <section id="servicos" className="py-16 sm:py-24 bg-white">
+        <section id="servicos" className="py-16 sm:py-24 bg-white scroll-mt-24 sm:scroll-mt-32">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
               <h2 className="text-3xl sm:text-4xl font-bold text-brand-primary mb-4">Soluções Completas em Telerradiologia</h2>
