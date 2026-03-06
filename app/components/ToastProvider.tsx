@@ -2,9 +2,14 @@
 
 import dynamic from 'next/dynamic';
 const ToastContainer = dynamic(() => import('react-toastify').then(mod => mod.ToastContainer), { ssr: false });
-import 'react-toastify/dist/ReactToastify.css';
+import { useEffect } from 'react';
 
 export default function ToastProvider() {
+    useEffect(() => {
+        // Load CSS only on client side to prevent render blocking
+        import('react-toastify/dist/ReactToastify.css');
+    }, []);
+
     return (
         <ToastContainer
             position="top-right"
