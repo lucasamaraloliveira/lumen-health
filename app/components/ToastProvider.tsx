@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 export default function ToastProvider() {
     useEffect(() => {
         // Load CSS only on client side to prevent render blocking
+        // @ts-ignore - Ignore type error for dynamic CSS import in build
         import('react-toastify/dist/ReactToastify.css');
     }, []);
 
