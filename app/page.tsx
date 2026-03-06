@@ -265,36 +265,36 @@ export default function Home() {
         <section className="relative pt-32 pb-20 sm:pt-40 sm:pb-32 overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-              <div className="text-center lg:text-left">
+              <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 border border-sky-100 text-sky-700 text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-6 animate-fade-in">
                   <Activity size={14} />
                   Líder em Telerradiologia no Brasil
                 </div>
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-brand-primary leading-[1.1] mb-6 animate-slide-up">
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-brand-primary leading-[1.1] mb-6 animate-slide-up max-w-2xl mx-auto lg:mx-0">
                   Diagnósticos Precisos, <span className="text-brand-secondary">Sem Fronteiras.</span>
                 </h1>
                 <p className="text-base sm:text-lg text-slate-600 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed animate-slide-up animation-delay-100">
                   A Lumen Health conecta sua clínica aos melhores radiologistas do país. Laudos ágeis, precisos e disponíveis 24/7 para elevar o padrão do seu atendimento.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-slide-up animation-delay-200">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start w-full max-w-sm sm:max-w-none mx-auto lg:mx-0 animate-slide-up animation-delay-200">
                   <a
                     href="https://wa.me/551140030000?text=Quero%20um%20or%C3%A7amento"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-sky-600 text-white px-8 py-4 rounded-full font-bold text-base sm:text-lg hover:bg-brand-primary transition-all shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2 group"
+                    className="bg-sky-600 text-white px-8 py-4 rounded-full font-bold text-base sm:text-lg hover:bg-brand-primary transition-all shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2 group w-full sm:w-auto"
                   >
                     Solicitar Orçamento
                     <ArrowRight className="group-hover:translate-x-1 transition-transform" />
                   </a>
-                  <a href="#servicos" className="border-2 border-slate-200 text-slate-700 px-8 py-4 rounded-full font-bold text-base sm:text-lg hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
+                  <a href="#servicos" className="border-2 border-slate-200 text-slate-700 px-8 py-4 rounded-full font-bold text-base sm:text-lg hover:bg-slate-50 transition-all flex items-center justify-center gap-2 w-full sm:w-auto">
                     Nossos Serviços
                   </a>
                 </div>
 
-                <div className="mt-12 grid grid-cols-3 gap-4 sm:gap-8 border-t border-slate-200 pt-8 max-w-md mx-auto lg:mx-0 animate-fade-in animation-delay-300">
+                <div className="mt-12 grid grid-cols-3 gap-2 sm:gap-8 border-t border-slate-200 pt-8 w-full max-w-sm sm:max-w-md mx-auto lg:mx-0 animate-fade-in animation-delay-300">
                   <div className="text-center lg:text-left">
-                    <div className="text-xl sm:text-2xl font-bold text-brand-primary">15min</div>
-                    <div className="text-[10px] sm:text-xs text-slate-500 uppercase tracking-tight">Urgências</div>
+                    <div className="text-lg sm:text-2xl font-bold text-brand-primary">15min</div>
+                    <div className="text-[9px] sm:text-xs text-slate-500 uppercase tracking-tight">Urgências</div>
                   </div>
                   <div className="text-center lg:text-left">
                     <div className="text-xl sm:text-2xl font-bold text-brand-primary">500+</div>
