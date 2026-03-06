@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Activity,
@@ -27,11 +28,13 @@ import {
   ArrowUp,
   MessageCircle
 } from 'lucide-react';
+
 import { Logo } from './components/Logo';
 import { toast } from 'react-toastify';
 import { sendGTMEvent } from '@next/third-parties/google';
+import { services } from './data/services';
 
-
+const ServiceModal = dynamic(() => import('./components/ServiceModal'), { ssr: false });
 
 const NavItem = ({ children, href }: { children: React.ReactNode, href: string }) => (
   <a
@@ -69,68 +72,6 @@ const SocialIcon = ({ icon: Icon, href }: { icon: any, href: string }) => (
   </a>
 );
 
-const ServiceModal = ({ isOpen, onClose, service }: { isOpen: boolean, onClose: () => void, service: any }) => {
-  if (!service) return null;
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100]"
-          />
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-2rem)] sm:max-w-xl bg-white z-[101] rounded-3xl shadow-2xl overflow-hidden"
-          >
-            <div className="relative p-8 sm:p-12">
-              <button
-                onClick={onClose}
-                className="absolute top-6 right-6 p-2 text-slate-400 hover:text-slate-600 bg-slate-50 rounded-full transition-colors"
-              >
-                <X size={20} />
-              </button>
-
-              <div className="w-16 h-16 bg-sky-50 rounded-2xl flex items-center justify-center text-brand-secondary mb-6">
-                <service.icon size={32} />
-              </div>
-
-              <h3 className="text-3xl font-bold text-brand-primary mb-4">{service.title}</h3>
-              <p className="text-slate-600 text-lg leading-relaxed mb-8">
-                {service.fullDescription}
-              </p>
-
-              <div className="space-y-4">
-                <h4 className="font-bold text-brand-primary uppercase text-xs tracking-widest">Diferenciais</h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {service.benefits.map((benefit: string, i: number) => (
-                    <div key={i} className="flex items-center gap-2 text-slate-600 text-sm">
-                      <CheckCircle2 size={16} className="text-green-500 shrink-0" />
-                      {benefit}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <button
-                onClick={onClose}
-                className="w-full mt-10 bg-brand-primary text-white py-4 rounded-xl font-bold hover:bg-slate-800 transition-all"
-              >
-                Fechar
-              </button>
-            </div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
-  );
-};
-
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -157,7 +98,16 @@ export default function Home() {
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400);
+    };
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   const validate = () => {
@@ -177,59 +127,6 @@ export default function Home() {
     if (numbers.length <= 7) return `(${numbers.slice(0, 2)}) ${numbers.slice(2)}`;
     return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`;
   };
-
-  const services = [
-    {
-      icon: Activity,
-      title: "Raio-X Digital",
-      description: "Laudos de radiologia convencional e contrastada com alta precisão e rapidez.",
-      fullDescription: "Nosso serviço de Raio-X digital utiliza plataformas de ponta para análise de radiografias convencionais e contrastadas. Oferecemos laudos detalhados que auxiliam no diagnóstico rápido de fraturas, patologias torácicas, abdominais e muito mais.",
-      benefits: ["Plantão 24/7", "Laudos em 15min", "Dupla checagem", "Conformidade LGPD"]
-    },
-    {
-      icon: Database,
-      title: "Tomografia",
-      description: "Análise detalhada de exames de CT com reconstruções 3D e protocolos específicos.",
-      fullDescription: "Especialistas em Tomografia Computadorizada realizam a leitura de exames complexos, incluindo angiotomografias e reconstruções tridimensionais. Focamos na precisão anatômica e na identificação precoce de anomalias.",
-      benefits: ["Reconstrução 3D", "Protocolos específicos", "Subespecialistas", "Alta resolução"]
-    },
-    {
-      icon: Shield,
-      title: "Ressonância",
-      description: "Especialistas em neuro, musculoesquelético e abdome para laudos complexos.",
-      fullDescription: "A Ressonância Magnética exige expertise profunda. Contamos com um corpo clínico dividido por subespecialidades para garantir que cada exame de neuro, abdome ou musculoesquelético seja laudado por quem mais entende do assunto.",
-      benefits: ["Laudos Neuro", "Musculoesquelético", "Abdome superior", "Pelve masculina/fem"]
-    },
-    {
-      icon: FileText,
-      title: "Mamografia",
-      description: "Leitura crítica seguindo padrões BI-RADS para detecção precoce e acompanhamento.",
-      fullDescription: "Dedicamos atenção especial à saúde da mulher. Nossos laudos de mamografia seguem rigorosamente o padrão BI-RADS, garantindo uma comunicação clara e precisa entre radiologista e médico assistente.",
-      benefits: ["Padrão BI-RADS", "Prevenção", "Expertise em mama", "Acompanhamento"]
-    },
-    {
-      icon: Users,
-      title: "Segunda Opinião",
-      description: "Consultoria especializada para casos desafiadores e revisão de diagnósticos.",
-      fullDescription: "Oferecemos um serviço de consultoria radiológica para casos de alta complexidade. Nossa equipe revisa exames e fornece uma perspectiva adicional fundamentada nas melhores práticas mundiais.",
-      benefits: ["Casos complexos", "Revisão detalhada", "Consultoria direta", "Segurança diagnóstica"]
-    },
-    {
-      icon: Globe,
-      title: "Telerradiologia 24h",
-      description: "Suporte ininterrupto para plantões e emergências em todo o território nacional.",
-      fullDescription: "Sua clínica nunca fica descoberta. Nosso serviço de plantão 24 horas garante que exames de urgência e emergência sejam laudados em tempo recorde, independentemente do horário ou localização.",
-      benefits: ["Acesso remoto", "Nacional", "Suporte 24/7", "Escalabilidade"]
-    }
-  ];
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 400);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -257,10 +154,7 @@ export default function Home() {
 
       if (response.ok) {
         toast.success('Mensagem enviada com sucesso! Entraremos em contato em breve.');
-
-        // Google Ads / GTM Conversion Event
         sendGTMEvent({ event: 'generate_lead', value: 'contact_form' });
-
         setStatus('success');
         setFormData({ name: '', email: '', phone: '', subject: 'Solicitar Orçamento', message: '' });
         setTimeout(() => setStatus('idle'), 5000);
@@ -285,6 +179,7 @@ export default function Home() {
         onClose={() => setSelectedService(null)}
         service={selectedService}
       />
+
       {/* Floating Navbar */}
       <div className="fixed top-4 sm:top-6 inset-x-0 z-50 px-4 sm:px-6 lg:px-8 pointer-events-none">
         <header className="max-w-7xl mx-auto h-16 sm:h-20 glass-card border border-slate-200/50 rounded-2xl sm:rounded-3xl shadow-xl shadow-slate-200/40 flex items-center justify-between px-4 sm:px-8 pointer-events-auto">
@@ -368,23 +263,18 @@ export default function Home() {
         <section className="relative pt-12 pb-20 sm:pt-20 sm:pb-32 overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="text-center lg:text-left"
-              >
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 border border-sky-100 text-brand-secondary text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-6">
+              <div className="text-center lg:text-left">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 border border-sky-100 text-brand-secondary text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-6 animate-fade-in">
                   <Activity size={14} />
                   Líder em Telerradiologia no Brasil
                 </div>
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-brand-primary leading-[1.1] mb-6">
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-brand-primary leading-[1.1] mb-6 animate-slide-up">
                   Diagnósticos Precisos, <span className="text-brand-secondary">Sem Fronteiras.</span>
                 </h1>
-                <p className="text-base sm:text-lg text-slate-600 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                <p className="text-base sm:text-lg text-slate-600 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed animate-slide-up animation-delay-100">
                   A Lumen Health conecta sua clínica aos melhores radiologistas do país. Laudos ágeis, precisos e disponíveis 24/7 para elevar o padrão do seu atendimento.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-slide-up animation-delay-200">
                   <a
                     href="https://wa.me/551140030000?text=Quero%20um%20or%C3%A7amento"
                     target="_blank"
@@ -399,7 +289,7 @@ export default function Home() {
                   </a>
                 </div>
 
-                <div className="mt-12 grid grid-cols-3 gap-4 sm:gap-8 border-t border-slate-200 pt-8 max-w-md mx-auto lg:mx-0">
+                <div className="mt-12 grid grid-cols-3 gap-4 sm:gap-8 border-t border-slate-200 pt-8 max-w-md mx-auto lg:mx-0 animate-fade-in animation-delay-300">
                   <div className="text-center lg:text-left">
                     <div className="text-xl sm:text-2xl font-bold text-brand-primary">15min</div>
                     <div className="text-[10px] sm:text-xs text-slate-500 uppercase tracking-tight">Urgências</div>
@@ -413,14 +303,9 @@ export default function Home() {
                     <div className="text-[10px] sm:text-xs text-slate-500 uppercase tracking-tight">Digital</div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
 
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="relative mt-8 lg:mt-0"
-              >
+              <div className="relative mt-8 lg:mt-0">
                 <div className="relative z-10 rounded-3xl overflow-hidden shadow-2xl shadow-slate-400/20 border-4 sm:border-8 border-white aspect-[4/3] sm:aspect-auto h-[300px] sm:h-[450px]">
                   <Image
                     src="https://picsum.photos/seed/radiology/800/600"
@@ -429,6 +314,7 @@ export default function Home() {
                     className="object-cover"
                     priority
                     fetchPriority="high"
+                    quality={60}
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-brand-primary/40 to-transparent" />
@@ -475,7 +361,7 @@ export default function Home() {
                     </div>
                   </div>
                 </motion.div>
-              </motion.div>
+              </div>
             </div>
           </div>
         </section>
@@ -507,7 +393,7 @@ export default function Home() {
                     <item.icon size={24} />
                   </div>
                   <h4 className="font-bold text-brand-primary mb-2">{item.title}</h4>
-                  <p className="text-slate-500 text-sm">{item.desc}</p>
+                  <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
                 </motion.div>
               ))}
             </div>
@@ -515,36 +401,11 @@ export default function Home() {
         </section>
 
         {/* About Section */}
-        <section id="sobre" className="py-16 sm:py-24 bg-white overflow-hidden scroll-mt-24 sm:scroll-mt-32">
+        <section id="sobre" className="py-16 sm:py-24 bg-white scroll-mt-24 sm:scroll-mt-32">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-              >
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-wider mb-6">
-                  Nossa História
-                </div>
-                <h2 className="text-3xl sm:text-4xl font-bold text-brand-primary mb-6">Tecnologia Humana a Serviço da Vida</h2>
-                <div className="space-y-4 text-slate-600 leading-relaxed">
-                  <p>Fundada com o propósito de democratizar o acesso a diagnósticos de alta qualidade, a Lumen Health nasceu da união entre medicina radiológica e inovação tecnológica.</p>
-                  <p>Hoje, somos referência em telerradiologia no Brasil, atendendo centenas de clínicas e hospitais com um compromisso inegociável: a precisão diagnóstica que salva vidas.</p>
-                  <p>Nossa equipe é composta por radiologistas subespecialistas que utilizam as ferramentas mais avançadas e processamento de imagem para entregar laudos detalhados e assertivos.</p>
-                </div>
-                <div className="mt-8 grid grid-cols-2 gap-6">
-                  <div className="p-4 bg-sky-50 rounded-xl">
-                    <div className="text-2xl font-bold text-brand-secondary">1M+</div>
-                    <div className="text-xs text-slate-500">Exames laudados</div>
-                  </div>
-                  <div className="p-4 bg-sky-50 rounded-xl">
-                    <div className="text-2xl font-bold text-brand-secondary">24/7</div>
-                    <div className="text-xs text-slate-500">Suporte ininterrupto</div>
-                  </div>
-                </div>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 className="relative"
@@ -555,17 +416,50 @@ export default function Home() {
                     alt="Médico radiologista analisando exames em monitor profissional"
                     fill
                     className="object-cover"
+                    quality={60}
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
                 </div>
                 <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-brand-accent rounded-full -z-10 blur-3xl opacity-20" />
               </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+              >
+                <div className="inline-block px-4 py-1.5 rounded-full bg-brand-secondary/10 text-brand-secondary text-sm font-bold mb-6">
+                  Nossa História
+                </div>
+                <h2 className="text-3xl sm:text-4xl font-bold text-brand-primary mb-6">
+                  Inovação médica que conecta laudos de alta precisão a quem mais precisa.
+                </h2>
+                <p className="text-slate-600 text-lg mb-8 leading-relaxed">
+                  A Lumen Health nasceu com o propósito de democratizar o acesso a diagnósticos de excelência. Combinando inteligência logística e um corpo clínico de elite, superamos barreiras geográficas para entregar agilidade onde cada segundo conta.
+                </p>
+                <div className="space-y-4 mb-10">
+                  {[
+                    "Equipe 100% formada por radiologistas especialistas",
+                    "Tecnologia de ponta em transmissão de dados",
+                    "Suporte técnico e médico disponível 24 horas",
+                    "Integração direta com todos os sistemas PACS/RIS"
+                  ].map((text, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center text-green-600 shrink-0">
+                        <CheckCircle2 size={14} />
+                      </div>
+                      <span className="text-slate-700 font-medium">{text}</span>
+                    </div>
+                  ))}
+                </div>
+                <a href="#contato" className="bg-brand-primary text-white px-8 py-4 rounded-full font-bold hover:bg-slate-800 transition-all inline-flex items-center gap-2">
+                  Saiba mais sobre nós
+                  <ArrowRight size={20} />
+                </a>
+              </motion.div>
             </div>
           </div>
         </section>
-
-
-
 
         {/* Services Section */}
         <section id="servicos" className="py-16 sm:py-24 bg-white scroll-mt-24 sm:scroll-mt-32">
@@ -607,45 +501,26 @@ export default function Home() {
                       href="https://wa.me/551140030000?text=Quero%20um%20or%C3%A7amento"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-white text-brand-primary px-4 sm:px-8 py-3 sm:py-4 rounded-full font-bold text-xs sm:text-base lg:text-lg hover:bg-sky-50 transition-all whitespace-nowrap"
+                      className="bg-brand-secondary text-white px-6 sm:px-10 py-4 rounded-full font-bold text-sm sm:text-lg hover:bg-brand-accent transition-all flex items-center gap-2 group whitespace-nowrap"
                     >
-                      Falar com Especialista
+                      Começar Agora
+                      <ArrowRight className="group-hover:translate-x-1 transition-transform" />
                     </a>
-                    <a
-                      href="tel:1140030000"
-                      className="border border-white/30 text-white px-4 sm:px-8 py-3 sm:py-4 rounded-full font-bold text-xs sm:text-base lg:text-lg hover:bg-white/10 transition-all flex items-center justify-center gap-2 whitespace-nowrap"
-                    >
-                      <Phone size={16} className="sm:w-5 sm:h-5" />
-                      (11) 4003-0000
+                    <a href="#contato" className="border-2 border-white/20 text-white px-6 sm:px-10 py-4 rounded-full font-bold text-sm sm:text-lg hover:bg-white/10 transition-all whitespace-nowrap">
+                      Falar com Consultor
                     </a>
                   </div>
                 </div>
-                <div className="hidden lg:block">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-4">
-                      <div className="bg-white/10 backdrop-blur-sm p-6 rounded-3xl border border-white/10">
-                        <Clock className="text-brand-accent mb-4" size={32} />
-                        <div className="text-white font-bold text-lg">Agilidade</div>
-                        <div className="text-sky-100/60 text-sm">Laudos em tempo recorde</div>
-                      </div>
-                      <div className="bg-white/10 backdrop-blur-sm p-6 rounded-3xl border border-white/10">
-                        <Shield className="text-brand-accent mb-4" size={32} />
-                        <div className="text-white font-bold text-lg">Segurança</div>
-                        <div className="text-sky-100/60 text-sm">Dados criptografados</div>
-                      </div>
-                    </div>
-                    <div className="space-y-4 pt-8">
-                      <div className="bg-white/10 backdrop-blur-sm p-6 rounded-3xl border border-white/10">
-                        <Users className="text-brand-accent mb-4" size={32} />
-                        <div className="text-white font-bold text-lg">Qualidade</div>
-                        <div className="text-sky-100/60 text-sm">Corpo clínico de elite</div>
-                      </div>
-                      <div className="bg-white/10 backdrop-blur-sm p-6 rounded-3xl border border-white/10">
-                        <Activity className="text-brand-accent mb-4" size={32} />
-                        <div className="text-white font-bold text-lg">Inovação</div>
-                        <div className="text-sky-100/60 text-sm">Tecnologia de ponta</div>
-                      </div>
-                    </div>
+                <div className="hidden lg:grid grid-cols-2 gap-6">
+                  <div className="bg-white/10 backdrop-blur-sm p-8 rounded-3xl border border-white/10 transform -translate-y-8">
+                    <Users className="text-brand-accent mb-4" size={32} />
+                    <div className="text-white font-bold text-lg">Qualidade</div>
+                    <div className="text-sky-100/60 text-sm">Corpo clínico de elite</div>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-sm p-6 rounded-3xl border border-white/10">
+                    <Activity className="text-brand-accent mb-4" size={32} />
+                    <div className="text-white font-bold text-lg">Inovação</div>
+                    <div className="text-sky-100/60 text-sm">Tecnologia de ponta</div>
                   </div>
                 </div>
               </div>

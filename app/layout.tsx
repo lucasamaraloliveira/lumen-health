@@ -32,11 +32,13 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://picsum.photos" />
         <link rel="preconnect" href="https://i.pravatar.cc" />
+        <link rel="dns-prefetch" href="https://picsum.photos" />
+        <link rel="dns-prefetch" href="https://i.pravatar.cc" />
       </head>
       <body className={`${inter.variable} ${outfit.variable} antialiased font-sans`}>
-        <GoogleTagManager gtmId="GTM-XXXXXXX" />
         {children}
         <ToastProvider />
+        <GoogleTagManager gtmId="GTM-XXXXXXX" />
       </body>
     </html>
   );
