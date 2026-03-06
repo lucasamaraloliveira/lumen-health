@@ -428,7 +428,8 @@ export default function Home() {
                     fill
                     className="object-cover"
                     priority
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
+                    fetchPriority="high"
+                    sizes="(max-width: 768px) 100vw, 50vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-brand-primary/40 to-transparent" />
                 </div>
