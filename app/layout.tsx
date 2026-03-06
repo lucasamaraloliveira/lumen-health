@@ -1,5 +1,18 @@
 import type { Metadata } from "next";
+import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Lumen Health - Telerradiologia de Precisão",
@@ -17,7 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className="antialiased font-sans">
+      <body className={`${inter.variable} ${outfit.variable} antialiased font-sans`}>
         <GoogleTagManager gtmId="GTM-XXXXXXX" />
         {children}
         <ToastContainer

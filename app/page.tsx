@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Activity,
@@ -420,12 +421,14 @@ export default function Home() {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 className="relative mt-8 lg:mt-0"
               >
-                <div className="relative z-10 rounded-3xl overflow-hidden shadow-2xl shadow-slate-400/20 border-4 sm:border-8 border-white aspect-[4/3] sm:aspect-auto">
-                  <img
+                <div className="relative z-10 rounded-3xl overflow-hidden shadow-2xl shadow-slate-400/20 border-4 sm:border-8 border-white aspect-[4/3] sm:aspect-auto h-[300px] sm:h-[450px]">
+                  <Image
                     src="https://picsum.photos/seed/radiology/800/600"
                     alt="Radiologista analisando exames"
-                    className="w-full h-full object-cover"
-                    referrerPolicy="no-referrer"
+                    fill
+                    className="object-cover"
+                    priority
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-brand-primary/40 to-transparent" />
                 </div>
@@ -458,12 +461,13 @@ export default function Home() {
                   </div>
                   <div className="flex -space-x-2">
                     {[1, 2, 3, 4].map(i => (
-                      <img
-                        key={i}
-                        src={`https://i.pravatar.cc/150?u=${i + 10}`}
-                        className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-white"
-                        alt="Avatar"
-                      />
+                      <div key={i} className="relative w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-white overflow-hidden">
+                        <Image
+                          src={`https://i.pravatar.cc/150?u=${i + 10}`}
+                          fill
+                          alt="Avatar"
+                        />
+                      </div>
                     ))}
                     <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center text-[8px] sm:text-[10px] font-bold text-slate-500">
                       +40
@@ -544,8 +548,14 @@ export default function Home() {
                 viewport={{ once: true }}
                 className="relative"
               >
-                <div className="rounded-3xl overflow-hidden shadow-2xl rotate-3 aspect-[3/4]">
-                  <img src="/images/radiologist.png" alt="Médico radiologista analisando exames em monitor profissional" className="w-full h-full object-cover" />
+                <div className="rounded-3xl overflow-hidden shadow-2xl rotate-3 aspect-[3/4] relative">
+                  <Image
+                    src="/images/radiologist.png"
+                    alt="Médico radiologista analisando exames em monitor profissional"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
                 </div>
                 <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-brand-accent rounded-full -z-10 blur-3xl opacity-20" />
               </motion.div>
