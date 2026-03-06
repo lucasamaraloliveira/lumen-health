@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 export const Logo = ({ className = "" }: { className?: string }) => {
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
