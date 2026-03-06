@@ -61,12 +61,13 @@ const FeatureCard = ({ icon: Icon, title, description, onClick }: { icon: any, t
   </motion.div>
 );
 
-const SocialIcon = ({ icon: Icon, href }: { icon: any, href: string }) => (
+const SocialIcon = ({ icon: Icon, href, label }: { icon: any, href: string, label: string }) => (
   <a
     href={href}
     target="_blank"
     rel="noopener noreferrer"
-    className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-brand-secondary hover:text-white transition-all duration-300"
+    aria-label={label}
+    className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-sky-600 hover:text-white transition-all duration-300"
   >
     <Icon size={18} />
   </a>
@@ -264,7 +265,7 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               <div className="text-center lg:text-left">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 border border-sky-100 text-brand-secondary text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-6 animate-fade-in">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 border border-sky-100 text-sky-700 text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-6 animate-fade-in">
                   <Activity size={14} />
                   Líder em Telerradiologia no Brasil
                 </div>
@@ -279,7 +280,7 @@ export default function Home() {
                     href="https://wa.me/551140030000?text=Quero%20um%20or%C3%A7amento"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-brand-secondary text-white px-8 py-4 rounded-full font-bold text-base sm:text-lg hover:bg-brand-accent transition-all shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2 group"
+                    className="bg-sky-600 text-white px-8 py-4 rounded-full font-bold text-base sm:text-lg hover:bg-brand-primary transition-all shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2 group"
                   >
                     Solicitar Orçamento
                     <ArrowRight className="group-hover:translate-x-1 transition-transform" />
@@ -356,7 +357,7 @@ export default function Home() {
                         />
                       </div>
                     ))}
-                    <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center text-[8px] sm:text-[10px] font-bold text-slate-500">
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center text-[8px] sm:text-[10px] font-bold text-slate-700">
                       +40
                     </div>
                   </div>
@@ -392,7 +393,7 @@ export default function Home() {
                   <div className="w-12 h-12 bg-sky-50 rounded-full flex items-center justify-center text-brand-secondary mx-auto mb-4">
                     <item.icon size={24} />
                   </div>
-                  <h4 className="font-bold text-brand-primary mb-2">{item.title}</h4>
+                  <h3 className="font-bold text-brand-primary mb-2">{item.title}</h3>
                   <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
                 </motion.div>
               ))}
@@ -501,7 +502,7 @@ export default function Home() {
                       href="https://wa.me/551140030000?text=Quero%20um%20or%C3%A7amento"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-brand-secondary text-white px-6 sm:px-10 py-4 rounded-full font-bold text-sm sm:text-lg hover:bg-brand-accent transition-all flex items-center gap-2 group whitespace-nowrap"
+                      className="bg-sky-600 text-white px-6 sm:px-10 py-4 rounded-full font-bold text-sm sm:text-lg hover:bg-brand-primary transition-all flex items-center gap-2 group whitespace-nowrap"
                     >
                       Começar Agora
                       <ArrowRight className="group-hover:translate-x-1 transition-transform" />
@@ -542,7 +543,7 @@ export default function Home() {
                       <Phone size={24} />
                     </div>
                     <div>
-                      <div className="text-xs text-sky-100/40 uppercase font-bold mb-1">Telefone</div>
+                      <div className="text-xs text-sky-100/70 uppercase font-bold mb-1">Telefone</div>
                       <div className="font-bold">0800 123 4567</div>
                     </div>
                   </div>
@@ -551,7 +552,7 @@ export default function Home() {
                       <Mail size={24} />
                     </div>
                     <div>
-                      <div className="text-xs text-sky-100/40 uppercase font-bold mb-1">E-mail</div>
+                      <div className="text-xs text-sky-100/70 uppercase font-bold mb-1">E-mail</div>
                       <div className="font-bold">contato@lumenhealth.com.br</div>
                     </div>
                   </div>
@@ -560,7 +561,7 @@ export default function Home() {
                       <MapPin size={24} />
                     </div>
                     <div>
-                      <div className="text-xs text-sky-100/40 uppercase font-bold mb-1">Endereço</div>
+                      <div className="text-xs text-sky-100/70 uppercase font-bold mb-1">Endereço</div>
                       <div className="font-bold text-sm">Rui Barbosa, 45 - Teresópolis, RJ</div>
                     </div>
                   </div>
@@ -732,7 +733,7 @@ export default function Home() {
                   <button
                     type="submit"
                     disabled={status === 'sending'}
-                    className={`w-full bg-brand-secondary text-white py-4 rounded-xl font-bold shadow-lg shadow-sky-100 hover:bg-brand-accent transition-all flex items-center justify-center gap-2 ${status === 'sending' ? 'opacity-70 cursor-not-allowed' : ''
+                    className={`w-full bg-sky-600 text-white py-4 rounded-xl font-bold shadow-lg shadow-sky-100 hover:bg-brand-primary transition-all flex items-center justify-center gap-2 ${status === 'sending' ? 'opacity-70 cursor-not-allowed' : ''
                       }`}
                   >
                     {status === 'sending' ? (
@@ -761,14 +762,14 @@ export default function Home() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
             <div className="col-span-1 sm:col-span-2 lg:col-span-1">
               <Logo className="mb-6" />
-              <p className="text-slate-500 leading-relaxed mb-6 max-w-sm">
+              <p className="text-slate-600 leading-relaxed mb-6 max-w-sm">
                 Transformando a radiologia através da tecnologia e expertise médica, conectando saúde onde quer que você esteja.
               </p>
               <div className="flex gap-3">
-                <SocialIcon icon={Linkedin} href="https://linkedin.com" />
-                <SocialIcon icon={Instagram} href="https://instagram.com" />
-                <SocialIcon icon={Facebook} href="https://facebook.com" />
-                <SocialIcon icon={Twitter} href="https://twitter.com" />
+                <SocialIcon icon={Linkedin} href="https://linkedin.com" label="LinkedIn" />
+                <SocialIcon icon={Instagram} href="https://instagram.com" label="Instagram" />
+                <SocialIcon icon={Facebook} href="https://facebook.com" label="Facebook" />
+                <SocialIcon icon={Twitter} href="https://twitter.com" label="Twitter" />
               </div>
             </div>
 
@@ -810,11 +811,11 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="border-t border-slate-200 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] sm:text-xs text-slate-400 text-center sm:text-left">
+          <div className="border-t border-slate-200 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] sm:text-xs text-slate-500 text-center sm:text-left">
             <p>© 2026 Lumen Health Telerradiologia. Desenvolvido por Alrion Tech 2026.</p>
             <div className="flex gap-6 sm:gap-8">
-              <a href="/privacidade" className="hover:text-slate-600 transition-colors">Privacidade</a>
-              <a href="/termos" className="hover:text-slate-600 transition-colors">Termos de Uso</a>
+              <a href="/privacidade" className="hover:text-sky-600 transition-colors">Privacidade</a>
+              <a href="/termos" className="hover:text-sky-600 transition-colors">Termos de Uso</a>
             </div>
           </div>
         </div>
