@@ -498,17 +498,17 @@ export default function Home() {
                   <p className="text-sky-100/80 text-lg sm:text-xl mb-10 leading-relaxed max-w-xl mx-auto lg:mx-0">
                     Reduza custos operacionais e aumente a satisfação dos seus pacientes com laudos mais rápidos e precisos.
                   </p>
-                  <div className="flex flex-row gap-2 sm:gap-4 justify-center lg:justify-start">
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center items-center lg:justify-start lg:items-start">
                     <a
                       href="https://wa.me/551140030000?text=Quero%20um%20or%C3%A7amento"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-sky-600 text-white px-6 sm:px-10 py-4 rounded-full font-bold text-sm sm:text-lg hover:bg-brand-primary transition-all flex items-center gap-2 group whitespace-nowrap"
+                      className="bg-sky-600 text-white px-8 py-4 rounded-full font-bold text-base sm:text-lg hover:bg-brand-primary transition-all flex items-center justify-center gap-2 group w-full max-w-[320px] sm:w-auto transition-all shadow-lg shadow-sky-900/20"
                     >
                       Começar Agora
                       <ArrowRight className="group-hover:translate-x-1 transition-transform" />
                     </a>
-                    <a href="#contato" className="border-2 border-white/20 text-white px-6 sm:px-10 py-4 rounded-full font-bold text-sm sm:text-lg hover:bg-white/10 transition-all whitespace-nowrap">
+                    <a href="#contato" className="border-2 border-white/20 text-white px-8 py-4 rounded-full font-bold text-base sm:text-lg hover:bg-white/10 transition-all w-full max-w-[320px] sm:w-auto text-center">
                       Falar com Consultor
                     </a>
                   </div>
