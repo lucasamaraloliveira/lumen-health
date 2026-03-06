@@ -19,10 +19,8 @@ export const metadata: Metadata = {
   description: "Plataforma avançada de telerradiologia oferecendo diagnósticos precisos e ágeis para clínicas e hospitais.",
 };
 
-import dynamic from 'next/dynamic';
-const ToastContainer = dynamic(() => import('react-toastify').then(mod => mod.ToastContainer), { ssr: false });
-import 'react-toastify/dist/ReactToastify.css';
 import { GoogleTagManager } from '@next/third-parties/google';
+import ToastProvider from './components/ToastProvider';
 
 export default function RootLayout({
   children,
@@ -38,18 +36,7 @@ export default function RootLayout({
       <body className={`${inter.variable} ${outfit.variable} antialiased font-sans`}>
         <GoogleTagManager gtmId="GTM-XXXXXXX" />
         {children}
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
+        <ToastProvider />
       </body>
     </html>
   );
