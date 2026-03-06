@@ -270,23 +270,23 @@ export default function Home() {
                   <Activity size={14} />
                   Líder em Telerradiologia no Brasil
                 </div>
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-brand-primary leading-[1.1] mb-6 animate-slide-up max-w-2xl mx-auto lg:mx-0">
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-brand-primary leading-[1.1] mb-6 animate-slide-up max-w-2xl mx-auto lg:mx-0 relative -left-2 sm:left-0">
                   Diagnósticos Precisos, <span className="text-brand-secondary">Sem Fronteiras.</span>
                 </h1>
-                <p className="text-base sm:text-lg text-slate-600 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed animate-slide-up animation-delay-100">
+                <p className="text-base sm:text-lg text-slate-600 mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed animate-slide-up animation-delay-100 relative -left-2 sm:left-0">
                   A Lumen Health conecta sua clínica aos melhores radiologistas do país. Laudos ágeis, precisos e disponíveis 24/7 para elevar o padrão do seu atendimento.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start w-full max-w-sm sm:max-w-none mx-auto lg:mx-0 animate-slide-up animation-delay-200">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center lg:items-start lg:justify-start w-full animate-slide-up animation-delay-200">
                   <a
                     href="https://wa.me/551140030000?text=Quero%20um%20or%C3%A7amento"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-sky-600 text-white px-8 py-4 rounded-full font-bold text-base sm:text-lg hover:bg-brand-primary transition-all shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2 group w-full sm:w-auto"
+                    className="bg-sky-600 text-white px-8 py-4 rounded-full font-bold text-base sm:text-lg hover:bg-brand-primary transition-all shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2 group w-full max-w-[320px] sm:max-w-none sm:w-auto"
                   >
                     Solicitar Orçamento
                     <ArrowRight className="group-hover:translate-x-1 transition-transform" />
                   </a>
-                  <a href="#servicos" className="border-2 border-slate-200 text-slate-700 px-8 py-4 rounded-full font-bold text-base sm:text-lg hover:bg-slate-50 transition-all flex items-center justify-center gap-2 w-full sm:w-auto">
+                  <a href="#servicos" className="border-2 border-slate-200 text-slate-700 px-8 py-4 rounded-full font-bold text-base sm:text-lg hover:bg-slate-50 transition-all flex items-center justify-center gap-2 w-full max-w-[320px] sm:max-w-none sm:w-auto">
                     Nossos Serviços
                   </a>
                 </div>
