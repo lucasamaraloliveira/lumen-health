@@ -265,15 +265,15 @@ export default function Home() {
         <section className="relative pt-32 pb-20 sm:pt-40 sm:pb-32 overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-              <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
+              <div className="flex flex-col items-center lg:items-start text-center lg:text-left w-full max-w-3xl mx-auto lg:mx-0 relative -left-2 lg:left-0">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 border border-sky-100 text-sky-700 text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-6 animate-fade-in">
                   <Activity size={14} />
                   Líder em Telerradiologia no Brasil
                 </div>
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-brand-primary leading-[1.1] mb-6 animate-slide-up max-w-2xl mx-auto lg:mx-0 relative -left-2 sm:left-0">
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-brand-primary leading-[1.1] mb-6 animate-slide-up max-w-2xl">
                   Diagnósticos Precisos, <span className="text-brand-secondary">Sem Fronteiras.</span>
                 </h1>
-                <p className="text-base sm:text-lg text-slate-600 mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed animate-slide-up animation-delay-100 relative -left-2 sm:left-0">
+                <p className="text-base sm:text-lg text-slate-600 mb-8 max-w-lg leading-relaxed animate-slide-up animation-delay-100">
                   A Lumen Health conecta sua clínica aos melhores radiologistas do país. Laudos ágeis, precisos e disponíveis 24/7 para elevar o padrão do seu atendimento.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center lg:items-start lg:justify-start w-full animate-slide-up animation-delay-200">

@@ -28,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className="scroll-smooth">
+    <html lang="pt-BR" className="scroll-smooth" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://picsum.photos" />
         <link rel="preconnect" href="https://i.pravatar.cc" />
