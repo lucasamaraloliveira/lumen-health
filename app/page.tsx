@@ -278,7 +278,7 @@ export default function Home() {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center lg:items-start lg:justify-start w-full animate-slide-up animation-delay-200">
                   <a
-                    href="https://wa.me/551140030000?text=Quero%20um%20or%C3%A7amento"
+                    href="https://wa.me/5521996544774?text=Gostaria%20de%20solicitar%20um%20or%C3%A7amento%20dos%20servi%C3%A7os%20de%20telerradiologia"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="bg-sky-600 text-white px-8 py-4 rounded-full font-bold text-base sm:text-lg hover:bg-brand-primary transition-all shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2 group w-full max-w-[320px] sm:max-w-none sm:w-auto"
@@ -500,7 +500,7 @@ export default function Home() {
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center lg:justify-start lg:items-start">
                     <a
-                      href="https://wa.me/551140030000?text=Quero%20um%20or%C3%A7amento"
+                      href="https://wa.me/5521996544774?text=Gostaria%20de%20solicitar%20um%20or%C3%A7amento%20dos%20servi%C3%A7os%20de%20telerradiologia"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="bg-sky-600 text-white px-8 py-4 rounded-full font-bold text-base sm:text-lg hover:bg-brand-primary transition-all flex items-center justify-center gap-2 group w-full max-w-[320px] sm:w-auto transition-all shadow-lg shadow-sky-900/20"
@@ -584,7 +584,7 @@ export default function Home() {
               <ul className="space-y-4 text-slate-600 text-sm sm:text-base">
                 <li className="flex items-start gap-3">
                   <Phone size={18} className="text-brand-secondary mt-1 shrink-0" />
-                  <span>0800 123 4567</span>
+                  <span>+55 21 99654-4774</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Mail size={18} className="text-brand-secondary mt-1 shrink-0" />
@@ -612,7 +612,7 @@ export default function Home() {
       <div className="fixed bottom-6 right-6 z-40 flex flex-col gap-4">
         {/* WhatsApp Balloon */}
         <motion.a
-          href="https://wa.me/551140030000"
+          href="https://wa.me/5521996544774?text=Gostaria%20de%20solicitar%20um%20or%C3%A7amento%20dos%20servi%C3%A7os%20de%20telerradiologia"
           target="_blank"
           rel="noopener noreferrer"
           initial={{ opacity: 0, scale: 0.5, x: 20 }}

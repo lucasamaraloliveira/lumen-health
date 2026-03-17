@@ -53,7 +53,7 @@ export default function ContactSection({
                                     </div>
                                     <div>
                                         <div className="text-xs text-sky-100/70 uppercase font-bold mb-1">Telefone</div>
-                                        <div className="font-bold">0800 123 4567</div>
+                                        <div className="font-bold">+55 21 99654-4774</div>
                                     </div>
                                 </div>
                                 <div className="flex gap-4 group">
